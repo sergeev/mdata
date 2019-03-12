@@ -5,21 +5,21 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 	"strings"
 	"time"
 )
 
-func indexHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "<h1>Hello World</h1>")
-}
-
 func main() {
+	// load template
+	templates = template.Must(template.ParseGlob("app/views/layouts/*.html"))
 
 	handler := http.NewServeMux()
 
 	// C R U D
+	handler.HandleFunc("/", Logger(indexHandler))
 	handler.HandleFunc("/hello/", Logger(BasicAuth(helloHandler)))
 
 	handler.HandleFunc("/book/", Logger(bookHandler))
@@ -281,4 +281,11 @@ func (s *BookStore) DeleteBook(id string) error {
 		}
 	}
 	return errors.New(fmt.Sprintf("Book with id %s not found", id))
+}
+
+// Tempate parse
+var templates *template.Template
+
+func indexHandler(w http.ResponseWriter, r *http.Request) {
+	templates.ExecuteTemplate(w, "index.html", nil)
 }
