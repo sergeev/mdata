@@ -1,23 +1,50 @@
 package main
 
 import (
+	"database/sql"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/gorilla/mux"
+	"golang.org/x/crypto/bcrypt"
 	"html/template"
 	"log"
 	"net/http"
 	"strings"
 	"time"
-	//"database/sql"
 	_ "github.com/go-sql-driver/mysql"
 )
 
+// Account sql structure
+// CREATE TABLE users(
+//		id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+//  	username VARCHAR(50),
+// password VARCHAR(120)
+// );
+
+var db *sql.DB
+var err error
+
 func main() {
-	// load template
+	// default load template
 	templates = template.Must(template.ParseGlob("app/views/layouts/*.html"))
+	// account load template
+	//templates = aTemplate.Must(template.ParseGlob("app/views/layouts/account/*.html"))
+
+
+	// Load database
+	// db, err = sql.Open("mysql", "myUsername:myPassword@/myDatabase")
+	db, err = sql.Open("mysql", "root:_@/golang_db")
+	if err != nil {
+		panic(err.Error())
+	}
+	defer db.Close()
+
+	err = db.Ping()
+	if err != nil {
+		panic(err.Error())
+	}
 
 	//handler := http.NewServeMux()
 
@@ -32,8 +59,14 @@ func main() {
 	r := mux.NewRouter()
 	// main deep router
 	r.HandleFunc("/", Logger(indexHandler))
+
 	// administrative router
 	r.HandleFunc("/manage", Logger(BasicAuth(indexManage)))
+
+	// register and login route
+	r.HandleFunc("/signup", Logger(signupPage))
+	r.HandleFunc("/login", Logger(loginPage))
+
 	// misc router
 	r.HandleFunc("/hello/", Logger(BasicAuth(helloHandler)))
 	r.HandleFunc("/book/", Logger(bookHandler))
@@ -55,6 +88,7 @@ func main() {
 }
 
 type Resp struct {
+	// resp structure
 	Message interface{}
 	Error   string
 }
@@ -298,12 +332,80 @@ func (s *BookStore) DeleteBook(id string) error {
 	return errors.New(fmt.Sprintf("Book with id %s not found", id))
 }
 
+func signupPage(res http.ResponseWriter, req *http.Request) {
+	if req.Method != "POST" {
+		//http.ServeFile(res, req, "signup.html")
+		http.ServeFile(res, req, "/signup.html")
+		//templates.ExecuteTemplate(res, "account/signup.html", nil)
+		return
+	}
+
+	username := req.FormValue("username")
+	password := req.FormValue("password")
+
+	var user string
+
+	err := db.QueryRow("SELECT username FROM users WHERE username=?", username).Scan(&user)
+
+	switch {
+	case err == sql.ErrNoRows:
+		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+		if err != nil {
+			http.Error(res, "Server error, unable to create your account.", 500)
+			return
+		}
+
+		_, err = db.Exec("INSERT INTO users(username, password) VALUES(?, ?)", username, hashedPassword)
+		if err != nil {
+			http.Error(res, "Server error, unable to create your account.", 500)
+			return
+		}
+
+		res.Write([]byte("User created!"))
+		return
+	case err != nil:
+		http.Error(res, "Server error, unable to create your account.", 500)
+		return
+	default:
+		http.Redirect(res, req, "/", 301)
+	}
+}
+
+func loginPage(res http.ResponseWriter, req *http.Request) {
+	if req.Method != "POST" {
+		http.ServeFile(res, req, "app/views/layouts/account/login.html")
+
+		return
+	}
+
+	username := req.FormValue("username")
+	password := req.FormValue("password")
+
+	var databaseUsername string
+	var databasePassword string
+
+	err := db.QueryRow("SELECT username, password FROM users WHERE username=?", username).Scan(&databaseUsername, &databasePassword)
+
+	if err != nil {
+		http.Redirect(res, req, "/login", 301)
+		return
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(databasePassword), []byte(password))
+	if err != nil {
+		http.Redirect(res, req, "/login", 301)
+		return
+	}
+
+	res.Write([]byte("Hello" + databaseUsername))
+
+}
+
 // Template parse
 var templates *template.Template
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	templates.ExecuteTemplate(w, "index.html", nil)
-	//return
 }
 
 func indexManage(w http.ResponseWriter, r *http.Request) {
