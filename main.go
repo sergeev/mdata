@@ -26,16 +26,19 @@ import (
 var db *sql.DB
 var err error
 
+// Template parse
+var templates *template.Template
+
 func main() {
 	// default load template
-	templates = template.Must(template.ParseGlob("app/views/layouts/*.html"))
+	templates = template.Must(template.ParseGlob("app/views/layouts/*.gohtml"))
 	// account load template
 	//templates = aTemplate.Must(template.ParseGlob("app/views/layouts/account/*.html"))
 
 
 	// Load database
 	// db, err = sql.Open("mysql", "myUsername:myPassword@/myDatabase")
-	db, err = sql.Open("mysql", "root:_@/golang_db")
+	db, err = sql.Open("mysql", "root:10184902125410@/golang_db")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -334,9 +337,8 @@ func (s *BookStore) DeleteBook(id string) error {
 
 func signupPage(res http.ResponseWriter, req *http.Request) {
 	if req.Method != "POST" {
-		//http.ServeFile(res, req, "signup.html")
-		http.ServeFile(res, req, "/signup.html")
-		//templates.ExecuteTemplate(res, "account/signup.html", nil)
+		res.Header().Set("Content-Type", "text/html; charset=utf-8")
+		http.ServeFile(res, req, "app/views/layouts/account/signup.gohtml")
 		return
 	}
 
@@ -373,9 +375,13 @@ func signupPage(res http.ResponseWriter, req *http.Request) {
 
 func loginPage(res http.ResponseWriter, req *http.Request) {
 	if req.Method != "POST" {
-		http.ServeFile(res, req, "app/views/layouts/account/login.html")
-
+		res.Header().Set("Content-Type", "text/html; charset=utf-8")
+		http.ServeFile(res, req, "app/views/layouts/account/login.gohtml")
+		//templates.ExecuteTemplate(res, "app/views/layouts/account/login.gohtml", nil)
 		return
+		//http.ServeFile(res, req, "app/views/layouts/account/login.gohtml")
+
+		//return
 	}
 
 	username := req.FormValue("username")
@@ -401,11 +407,13 @@ func loginPage(res http.ResponseWriter, req *http.Request) {
 
 }
 
-// Template parse
-var templates *template.Template
-
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-	templates.ExecuteTemplate(w, "index.html", nil)
+	url := r.FormValue("url")
+	if url == "" {
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		templates.ExecuteTemplate(w, "index.gohtml", nil)
+		return
+	}
 }
 
 func indexManage(w http.ResponseWriter, r *http.Request) {
