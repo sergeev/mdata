@@ -2,12 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="af01ce77-82c7-44c0-a5f8-2ea517e0a98b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/app/views/layouts/i.gohtml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/views/layouts/index.gohtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/layouts/account/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/layouts/account/login.gohtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/layouts/account/signup.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/layouts/account/signup.gohtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/layouts/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/layouts/i.gohtml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -35,20 +31,11 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5940">
-              <caret line="396" column="14" lean-forward="true" selection-start-line="396" selection-start-column="14" selection-end-line="396" selection-end-column="14" />
+            <state relative-caret-position="156">
+              <caret line="36" column="7" lean-forward="true" selection-start-line="36" selection-start-column="7" selection-end-line="36" selection-end-column="28" />
               <folding>
                 <element signature="e#14#240#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/views/layouts/i.gohtml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="7" column="9" selection-start-line="7" selection-start-column="9" selection-end-line="7" selection-end-column="9" />
             </state>
           </provider>
         </entry>
@@ -95,9 +82,9 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="57" />
-    <option name="y" value="71" />
-    <option name="width" value="1400" />
+    <option name="x" value="14" />
+    <option name="y" value="40" />
+    <option name="width" value="1382" />
     <option name="height" value="793" />
   </component>
   <component name="ProjectView">
@@ -176,10 +163,10 @@
     </option>
   </component>
   <component name="ToolWindowManager">
-    <frame x="57" y="71" width="1400" height="793" extended-state="0" />
+    <frame x="14" y="40" width="1382" height="793" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17599411" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.18432836" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -192,7 +179,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" />
       <window_info anchor="bottom" id="Version Control" order="9" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.15977176" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.20684735" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -218,13 +205,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/views/layouts/account/i.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" lean-forward="true" selection-start-line="7" selection-end-line="7" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/layouts/account/i.html" />
     <entry file="file://$PROJECT_DIR$/../Go-Signup-Login-Example-MySQL/signup.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="379">
@@ -251,8 +232,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5940">
-          <caret line="396" column="14" lean-forward="true" selection-start-line="396" selection-start-column="14" selection-end-line="396" selection-end-column="14" />
+        <state relative-caret-position="156">
+          <caret line="36" column="7" lean-forward="true" selection-start-line="36" selection-start-column="7" selection-end-line="36" selection-end-column="28" />
           <folding>
             <element signature="e#14#240#0" expanded="true" />
           </folding>

@@ -14,6 +14,7 @@ import (
 	"strings"
 	"time"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/gomodule/redigo/redis"
 )
 
 // Account sql structure
@@ -26,14 +27,17 @@ import (
 var db *sql.DB
 var err error
 
+// Redis
+var cache redis.Conn
+
 // Template parse
 var templates *template.Template
 
 func main() {
 	// default load template
 	templates = template.Must(template.ParseGlob("app/views/layouts/*.gohtml"))
-	// account load template
-	//templates = aTemplate.Must(template.ParseGlob("app/views/layouts/account/*.html"))
+	// init radis
+	//initCache()
 
 
 	// Load database
@@ -88,6 +92,16 @@ func main() {
 	}
 	// Test log server witch fatal error
 	log.Fatal(s.ListenAndServe())
+}
+
+func initCache() {
+	// Initialize the redis connection to a redis instance running on your local machine
+	conn, err := redis.DialURL("redis://localhost")
+	if err != nil {
+		panic(err)
+	}
+	// Assign the connection to the package level `cache` variable
+	cache = conn
 }
 
 type Resp struct {
@@ -335,6 +349,16 @@ func (s *BookStore) DeleteBook(id string) error {
 	return errors.New(fmt.Sprintf("Book with id %s not found", id))
 }
 
+var users = map[string]string{
+	"user1": "password1",
+	"user2": "password2",
+}
+
+type Credentials struct {
+	Password string `json:"password"`
+	Username string `json:"username"`
+}
+
 func signupPage(res http.ResponseWriter, req *http.Request) {
 	if req.Method != "POST" {
 		res.Header().Set("Content-Type", "text/html; charset=utf-8")
@@ -377,11 +401,7 @@ func loginPage(res http.ResponseWriter, req *http.Request) {
 	if req.Method != "POST" {
 		res.Header().Set("Content-Type", "text/html; charset=utf-8")
 		http.ServeFile(res, req, "app/views/layouts/account/login.gohtml")
-		//templates.ExecuteTemplate(res, "app/views/layouts/account/login.gohtml", nil)
 		return
-		//http.ServeFile(res, req, "app/views/layouts/account/login.gohtml")
-
-		//return
 	}
 
 	username := req.FormValue("username")
@@ -403,7 +423,7 @@ func loginPage(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	res.Write([]byte("Hello" + databaseUsername))
+	res.Write([]byte("Hello " + databaseUsername))
 
 }
 
