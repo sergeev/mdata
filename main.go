@@ -5,31 +5,46 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/gorilla/mux"
 	"html/template"
 	"log"
 	"net/http"
 	"strings"
 	"time"
+	//"database/sql"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 func main() {
 	// load template
 	templates = template.Must(template.ParseGlob("app/views/layouts/*.html"))
 
-	handler := http.NewServeMux()
+	//handler := http.NewServeMux()
 
 	// C R U D
-	handler.HandleFunc("/", Logger(indexHandler))
-	handler.HandleFunc("/hello/", Logger(BasicAuth(helloHandler)))
+	//handler.HandleFunc("/", Logger(indexHandler))
+	//handler.HandleFunc("/hello/", Logger(BasicAuth(helloHandler)))
 
-	handler.HandleFunc("/book/", Logger(bookHandler))
+	//handler.HandleFunc("/book/", Logger(bookHandler))
 
-	handler.HandleFunc("/books/", Logger(booksHandler))
+	//handler.HandleFunc("/books/", Logger(booksHandler))
+
+	r := mux.NewRouter()
+	// main deep router
+	r.HandleFunc("/", Logger(indexHandler))
+	// administrative router
+	r.HandleFunc("/manage", Logger(BasicAuth(indexManage)))
+	// misc router
+	r.HandleFunc("/hello/", Logger(BasicAuth(helloHandler)))
+	r.HandleFunc("/book/", Logger(bookHandler))
+	r.HandleFunc("/books/", Logger(booksHandler))
+
+	http.Handle("/", r)
 
 	// server configs
 	s := http.Server{
 		Addr:           "0.0.0.0:8000",
-		Handler:        handler,
+		//Handler:        handler,
 		ReadTimeout:    10 * time.Second,
 		WriteTimeout:   10 * time.Second,
 		IdleTimeout:    10 * time.Second,
@@ -283,9 +298,14 @@ func (s *BookStore) DeleteBook(id string) error {
 	return errors.New(fmt.Sprintf("Book with id %s not found", id))
 }
 
-// Tempate parse
+// Template parse
 var templates *template.Template
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	templates.ExecuteTemplate(w, "index.html", nil)
+	//return
+}
+
+func indexManage(w http.ResponseWriter, r *http.Request) {
+	templates.ExecuteTemplate(w, "manage.html", nil)
 }
